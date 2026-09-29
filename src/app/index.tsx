@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from "react-native";
-
 import { RecipeItem } from "../components/recipe-item";
 
 export default function Index() {
@@ -7,7 +6,7 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.heading}>Home Recipes</Text>
       <Text style={styles.introduction}>
-        Simple dishes worth making again.
+        Simple dishes worth making again
       </Text>
 
       <RecipeItem

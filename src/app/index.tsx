@@ -1,4 +1,6 @@
+import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+
 import { RecipeItem } from "../components/recipe-item";
 
 export default function Index() {
@@ -16,6 +18,10 @@ export default function Index() {
         }}
         title="Tomato Basil Pasta"
       />
+
+      <Link href="/add-recipe" style={styles.addButton}>
+        Add my own recipe
+      </Link>
     </View>
   );
 }
@@ -38,5 +44,17 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 28,
     marginTop: 8,
+  },
+  addButton: {
+    backgroundColor: "#2f6b4f",
+    borderRadius: 8,
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "700",
+    marginTop: 20,
+    overflow: "hidden",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    textAlign: "center",
   },
 });

@@ -1,56 +1,62 @@
-# Welcome to your Expo app 👋
+# Home Recipes 🍳📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern cross-platform mobile application built with **React Native** and **Expo**. **Home Recipes** is designed to explore mobile UI patterns, list rendering performance comparisons, and form interactions.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 About the Project
 
-   ```bash
-   npm install
-   ```
+This project is created as part of learning and mastering React Native by following the official **[React Native Roadmap](https://roadmap.sh/react-native)** with a study group at **Parser Digital**, organized by **Joaquim Ley** and **Rafael Guevara**.
 
-2. Start the app
+### 📱 Pages Included
 
-   ```bash
-   npx expo start
-   ```
+- **Page 1 (Home Recipes):** High-performance rendering of 3 curated recipes using `@shopify/flash-list`.
+- **Page 2 (Scroll Benchmark):** Rendering 100 recipe items using `ScrollView` and `.map()` to observe list loading and rendering behavior.
+- **Page 3 (Add Recipe):** Interactive recipe creation form with custom input fields.
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🛠️ How to Use Expo & React Native
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Prerequisites
 
-## Get a fresh project
+Ensure you have **Node.js** (v18+) installed on your system.
 
-When you're ready, run:
+### 1. Install Dependencies
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Start the Development Server
 
-### Other setup steps
+```bash
+npx expo start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Once the dev server starts, you can choose how to run the app:
 
-## Learn more
+- Press `a` to open in an **Android Emulator**
+- Press `i` to open in an **iOS Simulator**
+- Press `w` to open in a **Web Browser**
+- Scan the QR code using the **[Expo Go](https://expo.dev/go)** app on your mobile device
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📜 Available Scripts
 
-## Join the community
+- `npm run start` – Start the Expo development server
+- `npm run android` – Run on Android emulator
+- `npm run ios` – Run on iOS simulator
+- `npm run web` – Run on web browser
+- `npm run lint` – Run ESLint to check code quality
+- `npx tsc --noEmit` – Run TypeScript type checking
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📚 Resources & References
+
+- 🗺️ **React Native Roadmap:** [roadmap.sh/react-native](https://roadmap.sh/react-native)
+- 📖 **Expo Documentation:** [docs.expo.dev](https://docs.expo.dev/)
+- 🔀 **Expo Router Docs:** [docs.expo.dev/router/introduction](https://docs.expo.dev/router/introduction/)
+- ⚡ **Shopify FlashList Docs:** [shopify.github.io/flash-list](https://shopify.github.io/flash-list/)

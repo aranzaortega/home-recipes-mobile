@@ -34,7 +34,7 @@ export default function Index() {
 
       <View style={styles.navContainer}>
         <Link href="/large-list" style={styles.secondaryButton}>
-          Page 2: See 100 Items List 🚀
+          Page 2: 100 Items List (ScrollView) 🚀
         </Link>
         <Link href="/add-recipe" style={styles.primaryButton}>
           Page 3: Add New Recipe 📝

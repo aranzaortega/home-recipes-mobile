@@ -2,6 +2,8 @@
 
 A modern cross-platform mobile application built with **React Native** and **Expo**. **Home Recipes** is designed to explore mobile UI patterns, list rendering performance comparisons, and form interactions.
 
+![Home Recipes Mobile App Preview](./assets/images/home-recipes-mobile.png)
+
 ---
 
 ## 🚀 About the Project

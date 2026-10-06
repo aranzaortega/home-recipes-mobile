@@ -1,5 +1,6 @@
+import { Link } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function AddRecipe() {
   const [imageUrl, setImageUrl] = useState("");
@@ -7,20 +8,28 @@ export default function AddRecipe() {
   const [description, setDescription] = useState("");
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Create a recipe</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.heading}>Create a Recipe</Text>
+        <Text style={styles.subheading}>Page 3: Recipe Form</Text>
+        <Text style={styles.description}>
+          Fill out the details below to add a custom dish to your recipe collection.
+        </Text>
+      </View>
 
       <TextInput
         autoCapitalize="none"
         keyboardType="url"
         onChangeText={setImageUrl}
-        placeholder="Picture URL"
+        placeholder="Picture URL (e.g. https://...)"
+        placeholderTextColor="#9a948a"
         style={styles.input}
         value={imageUrl}
       />
       <TextInput
         onChangeText={setTitle}
         placeholder="Recipe title"
+        placeholderTextColor="#9a948a"
         style={styles.input}
         value={title}
       />
@@ -28,31 +37,55 @@ export default function AddRecipe() {
         multiline
         numberOfLines={4}
         onChangeText={setDescription}
-        placeholder="Description"
+        placeholder="Description & preparation steps..."
+        placeholderTextColor="#9a948a"
         style={[styles.input, styles.descriptionInput]}
         textAlignVertical="top"
         value={description}
       />
 
       <Pressable style={styles.createButton}>
-        <Text style={styles.createButtonText}>Create</Text>
+        <Text style={styles.createButtonText}>Save Recipe</Text>
       </Pressable>
-    </View>
+
+      <View style={styles.navContainer}>
+        <Link href="/" style={styles.secondaryButton}>
+          ⬅️ Back to Page 1 (3 Recipes)
+        </Link>
+        <Link href="/large-list" style={styles.secondaryButton}>
+          ➡️ Go to Page 2 (100 Items List)
+        </Link>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#f7f5f1",
     gap: 16,
     padding: 24,
+  },
+  header: {
+    marginBottom: 4,
   },
   heading: {
     color: "#24211d",
     fontSize: 28,
     fontWeight: "800",
-    marginBottom: 8,
+  },
+  subheading: {
+    color: "#2f6b4f",
+    fontSize: 15,
+    fontWeight: "700",
+    marginTop: 2,
+  },
+  description: {
+    color: "#625d55",
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 6,
   },
   input: {
     backgroundColor: "#ffffff",
@@ -72,10 +105,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#2f6b4f",
     borderRadius: 8,
     paddingVertical: 14,
+    marginTop: 8,
   },
   createButtonText: {
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "700",
+  },
+  navContainer: {
+    gap: 10,
+    marginTop: 16,
+  },
+  secondaryButton: {
+    backgroundColor: "#e7e2da",
+    borderRadius: 8,
+    color: "#24211d",
+    fontSize: 15,
+    fontWeight: "700",
+    paddingVertical: 12,
+    textAlign: "center",
   },
 });

@@ -1,11 +1,61 @@
+import * as Notifications from "expo-notifications";
 import { Link } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function AddRecipe() {
   const [imageUrl, setImageUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    async function prepareNotifications() {
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status !== "granted") {
+        await Notifications.requestPermissionsAsync();
+      }
+    }
+    prepareNotifications();
+  }, []);
+
+  async function handleSaveRecipe() {
+    if (!title.trim()) {
+      Alert.alert("Missing Title", "Please enter a title for your recipe before saving.");
+      return;
+    }
+
+    const recipeTitle = title.trim();
+
+    try {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Recipe Created! 🍳",
+          body: `"${recipeTitle}" has been successfully saved to your collection.`,
+          data: { title: recipeTitle, description, imageUrl },
+        },
+        trigger: null,
+      });
+    } catch (error) {
+      console.warn("Could not send push notification:", error);
+    }
+
+    // Clear form after saving
+    setImageUrl("");
+    setTitle("");
+    setDescription("");
+
+    Alert.alert("Success! 🌟", `Recipe "${recipeTitle}" saved! Form cleared.`);
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -44,7 +94,7 @@ export default function AddRecipe() {
         value={description}
       />
 
-      <Pressable style={styles.createButton}>
+      <Pressable onPress={handleSaveRecipe} style={styles.createButton}>
         <Text style={styles.createButtonText}>Save Recipe</Text>
       </Pressable>
 

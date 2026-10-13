@@ -1,32 +1,17 @@
-import * as Notifications from "expo-notifications";
 import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+import { NotificationToast } from "../components/notification-toast";
+import { sendRecipeNotification } from "../utils/notifications";
 
 export default function AddRecipe() {
   const [imageUrl, setImageUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  useEffect(() => {
-    async function prepareNotifications() {
-      const { status } = await Notifications.getPermissionsAsync();
-      if (status !== "granted") {
-        await Notifications.requestPermissionsAsync();
-      }
-    }
-    prepareNotifications();
-  }, []);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   async function handleSaveRecipe() {
     if (!title.trim()) {
@@ -36,81 +21,86 @@ export default function AddRecipe() {
 
     const recipeTitle = title.trim();
 
-    try {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Recipe Created! 🍳",
-          body: `"${recipeTitle}" has been successfully saved to your collection.`,
-          data: { title: recipeTitle, description, imageUrl },
-        },
-        trigger: null,
-      });
-    } catch (error) {
-      console.warn("Could not send push notification:", error);
-    }
+    // Trigger local push notification (if supported on standalone build)
+    sendRecipeNotification(recipeTitle);
 
-    // Clear form after saving
+    // Show visual in-app notification banner
+    setToastMessage(`"${recipeTitle}" has been added to your collection.`);
+    setToastVisible(true);
+
+    // Reset form fields
     setImageUrl("");
     setTitle("");
     setDescription("");
-
-    Alert.alert("Success! 🌟", `Recipe "${recipeTitle}" saved! Form cleared.`);
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.heading}>Create a Recipe</Text>
-        <Text style={styles.subheading}>Page 3: Recipe Form</Text>
-        <Text style={styles.description}>
-          Fill out the details below to add a custom dish to your recipe collection.
-        </Text>
-      </View>
-
-      <TextInput
-        autoCapitalize="none"
-        keyboardType="url"
-        onChangeText={setImageUrl}
-        placeholder="Picture URL (e.g. https://...)"
-        placeholderTextColor="#9a948a"
-        style={styles.input}
-        value={imageUrl}
-      />
-      <TextInput
-        onChangeText={setTitle}
-        placeholder="Recipe title"
-        placeholderTextColor="#9a948a"
-        style={styles.input}
-        value={title}
-      />
-      <TextInput
-        multiline
-        numberOfLines={4}
-        onChangeText={setDescription}
-        placeholder="Description & preparation steps..."
-        placeholderTextColor="#9a948a"
-        style={[styles.input, styles.descriptionInput]}
-        textAlignVertical="top"
-        value={description}
+    <View style={styles.outerContainer}>
+      <NotificationToast
+        message={toastMessage}
+        onHide={() => setToastVisible(false)}
+        title="Recipe Created! 🍳"
+        visible={toastVisible}
       />
 
-      <Pressable onPress={handleSaveRecipe} style={styles.createButton}>
-        <Text style={styles.createButtonText}>Save Recipe</Text>
-      </Pressable>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.heading}>Create a Recipe</Text>
+          <Text style={styles.subheading}>Page 3: Recipe Form</Text>
+          <Text style={styles.description}>
+            Fill out the details below to add a custom dish to your recipe collection.
+          </Text>
+        </View>
 
-      <View style={styles.navContainer}>
-        <Link href="/" style={styles.secondaryButton}>
-          ⬅️ Back to Page 1 (3 Recipes)
-        </Link>
-        <Link href="/large-list" style={styles.secondaryButton}>
-          ➡️ Go to Page 2 (100 Items List)
-        </Link>
-      </View>
-    </ScrollView>
+        <TextInput
+          autoCapitalize="none"
+          keyboardType="url"
+          onChangeText={setImageUrl}
+          placeholder="Picture URL (e.g. https://...)"
+          placeholderTextColor="#9a948a"
+          style={styles.input}
+          value={imageUrl}
+        />
+        <TextInput
+          onChangeText={setTitle}
+          placeholder="Recipe title"
+          placeholderTextColor="#9a948a"
+          style={styles.input}
+          value={title}
+        />
+        <TextInput
+          multiline
+          numberOfLines={4}
+          onChangeText={setDescription}
+          placeholder="Description & preparation steps..."
+          placeholderTextColor="#9a948a"
+          style={[styles.input, styles.descriptionInput]}
+          textAlignVertical="top"
+          value={description}
+        />
+
+        <Pressable onPress={handleSaveRecipe} style={styles.createButton}>
+          <Text style={styles.createButtonText}>Save Recipe</Text>
+        </Pressable>
+
+        <View style={styles.navContainer}>
+          <Link href="/" style={styles.secondaryButton}>
+            ⬅️ Back to Page 1 (3 Recipes)
+          </Link>
+          <Link href="/large-list" style={styles.secondaryButton}>
+            ➡️ Go to Page 2 (100 Items List)
+          </Link>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: "#f7f5f1",
+  },
   container: {
     flexGrow: 1,
     backgroundColor: "#f7f5f1",

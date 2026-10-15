@@ -1,6 +1,6 @@
 # Home Recipes 🍳📱
 
-A modern cross-platform mobile application built with **React Native** and **Expo**. **Home Recipes** is designed to explore mobile UI patterns, list rendering performance comparisons, and form interactions.
+A modern cross-platform mobile application built with **React Native** and **Expo**. **Home Recipes** is designed to explore mobile UI patterns, list rendering performance comparisons, form interactions, and enterprise mobile deployment architecture.
 
 ![Home Recipes Mobile App Preview](./assets/images/home-recipes-mobile.png)
 
@@ -14,7 +14,41 @@ This project is created as part of learning and mastering React Native by follow
 
 - **Page 1 (Home Recipes):** High-performance rendering of 3 curated recipes using `@shopify/flash-list`.
 - **Page 2 (Scroll Benchmark):** Rendering 100 recipe items using `ScrollView` and `.map()` to observe list loading and rendering behavior.
-- **Page 3 (Add Recipe):** Interactive recipe creation form with custom input fields.
+- **Page 3 (Add Recipe):** Interactive recipe creation form with custom input fields and toast feedback.
+
+---
+
+## 🏛️ Advanced Architecture Topics (Workshop Homework)
+
+### 1. App Stores vs. Over-The-Air (OTA) Updates
+
+Mobile app updates are split into two deployment pipelines: **Binary App Store Releases** and **EAS OTA Updates**.
+
+| Feature | App Store / Play Store Binary Release | EAS Over-The-Air (OTA) Update |
+| :--- | :--- | :--- |
+| **Delivery Channel** | Apple App Store & Google Play Store | EAS Update CDN directly to user devices |
+| **Review Process** | Requires Apple / Google store review (12h - 48h) | Instant deployment (seconds / minutes) |
+| **What can change?** | JS Bundle, Assets, Native Code (C++, Swift, Kotlin), Native Dependencies, App Config | JavaScript bundle, React components, CSS/styles, images/static assets |
+| **Native Boundary** | Changes native binary, permissions (`AndroidManifest.xml`, `Info.plist`), SDK upgrades | **NO native code changes allowed**. Cannot add native libraries with new native code. |
+
+#### ⚠️ Rule of Thumb for OTA Updates
+> **Allowed in OTA:** Fixing JS bugs, changing UI styles, updating copy, modifying business logic.  
+> **Requires App Store Submission:** Upgrading Expo SDK, adding native packages (e.g. `react-native-camera`), modifying native config plugins (`app.json`).
+
+---
+
+### 2. Expo Brownfield Architecture
+
+**Brownfield Integration** refers to embedding React Native / Expo screens inside an **existing native iOS (Swift/Obj-C) or Android (Kotlin/Java)** codebase, as opposed to a **Greenfield** app written entirely in React Native from scratch.
+
+#### Key Approaches to Brownfield with Expo:
+1. **Isolated View Approach (`ReactFragment` / `ReactController`):**
+   - The native app manages navigation, bottom tabs, and core screens.
+   - Expo/React Native views are embedded as native fragments (`ReactFragment` on Android) or view controllers (`UIViewController` on iOS) for specific features (e.g. recipe feed, checkout flow).
+2. **Integrated Navigation Approach (`@callstack/react-native-brownfield`):**
+   - Shared navigation stack where native screens can push React Native screens and vice versa.
+3. **Expo Continuous Native Generation (CNG):**
+   - Expo manages native directories (`ios/` and `android/`) via prebuild plugins, enabling seamless Expo library usage even in brownfield setups.
 
 ---
 

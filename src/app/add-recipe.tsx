@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { NotificationToast } from "../components/notification-toast";
+import { addRecipeToDatabase } from "../services/database";
 import { sendRecipeNotification } from "../utils/notifications";
 
 export default function AddRecipe() {
@@ -20,15 +21,28 @@ export default function AddRecipe() {
     }
 
     const recipeTitle = title.trim();
+    const recipeDescription = description.trim() || "Delicious home recipe.";
+    const recipeImage =
+      imageUrl.trim() ||
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=400&q=80";
 
-    // Trigger local push notification (if supported on standalone build)
+    // 1. Persist to SQLite Database & In-Memory Cache
+    await addRecipeToDatabase({
+      title: recipeTitle,
+      description: recipeDescription,
+      image: recipeImage,
+      prepTime: "15 min",
+      category: "Custom",
+    });
+
+    // 2. Trigger local push notification or fallback alert
     sendRecipeNotification(recipeTitle);
 
-    // Show visual in-app notification banner
-    setToastMessage(`"${recipeTitle}" has been added to your collection.`);
+    // 3. Show visual in-app notification banner
+    setToastMessage(`"${recipeTitle}" saved to offline SQLite database!`);
     setToastVisible(true);
 
-    // Reset form fields
+    // 4. Reset form fields
     setImageUrl("");
     setTitle("");
     setDescription("");
@@ -39,16 +53,16 @@ export default function AddRecipe() {
       <NotificationToast
         message={toastMessage}
         onHide={() => setToastVisible(false)}
-        title="Recipe Created! 🍳"
+        title="Recipe Saved to SQLite! 🍳"
         visible={toastVisible}
       />
 
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text style={styles.heading}>Create a Recipe</Text>
-          <Text style={styles.subheading}>Page 3: Recipe Form</Text>
+          <Text style={styles.subheading}>Page 3: Recipe Form + SQLite Persistence</Text>
           <Text style={styles.description}>
-            Fill out the details below to add a custom dish to your recipe collection.
+            {"Saving a recipe persists it directly into the device's local SQLite database."}
           </Text>
         </View>
 
@@ -80,7 +94,7 @@ export default function AddRecipe() {
         />
 
         <Pressable onPress={handleSaveRecipe} style={styles.createButton}>
-          <Text style={styles.createButtonText}>Save Recipe</Text>
+          <Text style={styles.createButtonText}>Save Recipe to SQLite</Text>
         </Pressable>
 
         <View style={styles.navContainer}>

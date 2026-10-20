@@ -1,24 +1,42 @@
 import { FlashList } from "@shopify/flash-list";
 import { Link } from "expo-router";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+import { ArchitectureCard } from "../components/architecture-card";
 import { RecipeItem } from "../components/recipe-item";
-import { THREE_RECIPES } from "../data/recipes";
+import { Recipe, THREE_RECIPES } from "../data/recipes";
+import { getRecipesFromDatabase, initDatabase } from "../services/database";
 
 export default function Index() {
+  const [recipes, setRecipes] = useState<Recipe[]>(THREE_RECIPES);
+
+  useEffect(() => {
+    async function loadData() {
+      await initDatabase();
+      const dbRecipes = await getRecipesFromDatabase();
+      if (dbRecipes && dbRecipes.length > 0) {
+        setRecipes(dbRecipes.slice(0, 3));
+      }
+    }
+    loadData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.heading}>Home Recipes</Text>
-        <Text style={styles.subheading}>Page 1: FlashList (3 Recipes)</Text>
+        <Text style={styles.subheading}>Page 1: FlashList + SQLite Offline Persistence</Text>
         <Text style={styles.description}>
-          This page renders 3 curated recipes using FlashList for high performance.
+          Renders recipes loaded from the local SQLite database via FlashList.
         </Text>
       </View>
 
+      <ArchitectureCard />
+
       <View style={styles.listContainer}>
         <FlashList
-          data={THREE_RECIPES}
+          data={recipes}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <RecipeItem
@@ -49,11 +67,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f7f5f1",
     paddingHorizontal: 20,
-    paddingTop: 56,
+    paddingTop: 52,
     paddingBottom: 20,
   },
   header: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   heading: {
     color: "#24211d",
@@ -62,23 +80,23 @@ const styles = StyleSheet.create({
   },
   subheading: {
     color: "#2f6b4f",
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "700",
-    marginTop: 4,
+    marginTop: 2,
   },
   description: {
     color: "#625d55",
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: 6,
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 4,
   },
   listContainer: {
     flex: 1,
-    marginTop: 8,
+    marginTop: 4,
   },
   navContainer: {
     gap: 10,
-    marginTop: 16,
+    marginTop: 12,
   },
   primaryButton: {
     backgroundColor: "#2f6b4f",

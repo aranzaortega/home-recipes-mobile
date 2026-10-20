@@ -2,10 +2,19 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { getCurrentUser } from "../services/auth";
+import { checkAndFetchOTAUpdate, getOTAInfo } from "../services/ota-updates";
 
 export function ArchitectureCard() {
   const [expanded, setExpanded] = useState(false);
+  const [isCheckingOTA, setIsCheckingOTA] = useState(false);
   const user = getCurrentUser();
+  const otaInfo = getOTAInfo();
+
+  async function handleCheckOTA() {
+    setIsCheckingOTA(true);
+    await checkAndFetchOTAUpdate();
+    setIsCheckingOTA(false);
+  }
 
   return (
     <View style={styles.card}>
@@ -39,14 +48,21 @@ export function ArchitectureCard() {
           </View>
 
           <View style={styles.specRow}>
-            <Text style={styles.specLabel}>API Pattern:</Text>
-            <Text style={styles.specValue}>Apollo GraphQL Schema & Local Store Sync</Text>
+            <Text style={styles.specLabel}>Deployment Strategy:</Text>
+            <Text style={styles.specValue}>
+              EAS OTA Updates (Channel: {otaInfo.channel}, Runtime: v{otaInfo.runtimeVersion})
+            </Text>
           </View>
 
-          <View style={styles.specRow}>
-            <Text style={styles.specLabel}>Deployment Strategy:</Text>
-            <Text style={styles.specValue}>EAS Build + EAS Update (OTA Bundle Distribution)</Text>
-          </View>
+          <Pressable
+            disabled={isCheckingOTA}
+            onPress={handleCheckOTA}
+            style={styles.otaButton}
+          >
+            <Text style={styles.otaButtonText}>
+              {isCheckingOTA ? "Checking OTA Channel..." : "Check for OTA Updates 🔄"}
+            </Text>
+          </Pressable>
         </View>
       )}
     </View>
@@ -118,5 +134,17 @@ const styles = StyleSheet.create({
     color: "#524d45",
     fontSize: 12,
     textAlign: "right",
+  },
+  otaButton: {
+    backgroundColor: "#2f6b4f",
+    borderRadius: 8,
+    marginTop: 6,
+    paddingVertical: 8,
+    alignItems: "center",
+  },
+  otaButtonText: {
+    color: "#ffffff",
+    fontSize: 12,
+    fontWeight: "700",
   },
 });
